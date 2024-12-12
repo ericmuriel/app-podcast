@@ -1,69 +1,60 @@
 import React from "react";
 import { useParams, Link } from "react-router-dom";
-import parse from "html-react-parser";
+import { usePodcastData } from "../../hooks/usePodcast";
+import { usePodcastEpisodes } from "../../hooks/usePodcastEpisodes";
 import "./EpisodeList.scss";
-import CardContainer from "../CardContainer/CardContainer";
-import { Item } from "../../types/RSSData";
-import { usePodcastRSS } from "../../hooks/usePodcastRss";
 
 const EpisodeList: React.FC = () => {
   const { podcastId } = useParams<{ podcastId: string }>();
-  const rssUrl = `https://itunes.apple.com/lookup?id=${podcastId}`;  
-  const { rssData, isLoading, error } = usePodcastRSS(rssUrl);
+  const { rssData, isLoading: isPodcastLoading, error: podcastError } = usePodcastData(podcastId!);
 
-  if (isLoading) {
-    return <div className="episode-list__loading">Cargando episodios...</div>;
-  }
+  const feedUrl = rssData?.feedUrl || "";
+  const { episodes, isLoading: isEpisodesLoading, error: episodesError } = usePodcastEpisodes(feedUrl);
 
-  if (error) {
-    return (
-      <div className="episode-list__error">
-        Error al cargar episodios. Por favor, inténtalo de nuevo.
-        <br />
-        {error}
-      </div>
-    );
-  }
-
+  if (isPodcastLoading) return <div>Cargando información del podcast...</div>;
+  if (podcastError) return <div>Error: {podcastError}</div>;
+  if (episodesError) return <div>Error al cargar episodios: {episodesError}</div>;
+  console.log(episodes);
   return (
     <div className="episode-list">
-      <CardContainer className="episode-list__summary">
-        <span className="episode-list__title">
-          Episodes: {rssData?.items.length || 0}
-        </span>
-      </CardContainer>
-
-      <CardContainer>
-        <table className="episode-list__table">
+      <div className="episode-list__info">
+        <img
+          src={rssData.artworkUrl600}
+          alt={rssData.collectionName}
+          className="episode-list__image"
+        />
+        <h1>{rssData.collectionName}</h1>
+        <h2>{rssData.artistName}</h2>
+      </div>
+      <div className="episode-list__episodes">
+      {episodes.length > 0 ?
+      <>
+      <h3>Episodes: {episodes.length}</h3>
+        <table>
           <thead>
             <tr>
-              <th className="episode-list__header">Title</th>
-              <th className="episode-list__header">Date</th>
-              <th className="episode-list__header">Duration</th>
+              <th>Title</th>
+              <th>Date</th>
+              <th>Duration</th>
             </tr>
           </thead>
           <tbody>
-            {rssData?.items.map((row: Item, i: number) => (
-              <tr key={row.guid["#text"]} className="episode-list__row">
+            {episodes.map((episode, index) => (
+              <tr key={episode.guid || index}>
                 <td>
-                  <Link
-                    to={`/podcast/${podcastId}/episode/${i}`}
-                    className="episode-list__link"
-                  >
-                    {parse(row.title["#text"] || "")}
+                  <Link to={`/podcast/${podcastId}/episode/${index}`}>
+                    {episode.title}
                   </Link>
                 </td>
-                <td>
-                  {row.pubDate["#text"]
-                    ? new Date(row.pubDate["#text"]).toLocaleDateString("en-US")
-                    : "N/A"}
-                </td>
-                <td>{row["itunes:duration"]["#text"] || "N/A"}</td>
+                <td>{new Date(episode.pubDate).toLocaleDateString()}</td>
+                <td>{episode.duration}</td>
               </tr>
             ))}
           </tbody>
         </table>
-      </CardContainer>
+      </>
+       : <div>Cargando episodios...</div>}
+       </div>
     </div>
   );
 };

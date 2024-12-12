@@ -1,17 +1,17 @@
 import { useState, useEffect } from "react";
 import { PodcastService } from "../services/PodcastService";
 
-export const usePodcastRSS = (rssUrl: string) => {
-  const [rssData, setRssData] = useState<any>(null);
+export const usePodcastData = (podcastId: string) => {
+  const [rssData, setRssData] = useState<any | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchRSS = async () => {
+    const fetchData = async () => {
       try {
         setIsLoading(true);
         const podcastService = PodcastService.getInstance();
-        const data = await podcastService.fetchPodcastRSS(rssUrl);
+        const data = await podcastService.fetchPodcastById(podcastId);
         setRssData(data);
       } catch (err: any) {
         setError(err.message);
@@ -20,10 +20,10 @@ export const usePodcastRSS = (rssUrl: string) => {
       }
     };
 
-    if (rssUrl) {
-      fetchRSS();
+    if (podcastId) {
+      fetchData();
     }
-  }, [rssUrl]);
+  }, [podcastId]);
 
   return { rssData, isLoading, error };
 };

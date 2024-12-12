@@ -1,52 +1,72 @@
 .episode-list {
-  padding: 1rem;
-  width: 100%;
+  display: flex;
+  gap: 20px;
+  padding: 20px;
 
-  &__summary {
-    margin-bottom: 1rem;
+  &__info {
+    flex: 1;
+    max-width: 300px;
+    text-align: center;
+    border: 1px solid #ddd;
+    padding: 15px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
 
-    .episode-list__title {
-      font-size: 1.5rem;
-      font-weight: bold;
-    }
+  &__image {
+    max-width: 100%;
+    border-radius: 5px;
+    margin-bottom: 15px;
+  }
+
+  &__title {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+
+  &__artist {
+    font-size: 16px;
+    color: gray;
+    margin-bottom: 15px;
+  }
+
+  &__description {
+    font-size: 14px;
+    color: #555;
+  }
+
+  &__episodes {
+    flex: 2;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 15px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  &__episodes-title {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 15px;
   }
 
   &__table {
     width: 100%;
     border-collapse: collapse;
-    text-align: left;
 
-    thead {
-      background-color: #f3f4f6; // Light gray
+    th, td {
+      padding: 10px;
+      border: 1px solid #ddd;
+      text-align: left;
     }
 
-    &__header {
-      padding: 1rem;
-      font-weight: bold;
-      font-size: 1rem;
-      border-bottom: 2px solid #e5e7eb; // Border gray
-    }
-
-    tbody {
-      .episode-list__row {
-        &:nth-child(even) {
-          background-color: #f9f9f9; // Alternating row color
-        }
-
-        &:hover {
-          background-color: #f0f0f0; // Hover effect
-        }
-
-        td {
-          padding: 1rem;
-          border-bottom: 1px solid #e5e7eb; // Row border
-        }
-      }
+    th {
+      background-color: #f8f8f8;
     }
   }
 
   &__link {
-    color: #2563eb; // Blue
+    color: #007bff;
     text-decoration: none;
 
     &:hover {

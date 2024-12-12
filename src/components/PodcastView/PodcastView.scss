@@ -1,0 +1,23 @@
+.podcast-view {
+    padding: 20px;
+  
+    &__title {
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 15px;
+    }
+  
+    &__description {
+      font-size: 16px;
+      line-height: 1.5;
+      margin-bottom: 20px;
+      color: #555;
+    }
+  
+    &__audio {
+      width: 100%;
+      margin-top: 15px;
+      border: none;
+    }
+  }
+  

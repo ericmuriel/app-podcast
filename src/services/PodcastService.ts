@@ -68,40 +68,58 @@ export class PodcastService {
 
   async fetchPodcastById(id: string): Promise<any> {
     console.log(`Fetching podcast details for ID: ${id}`);
-    const response = await fetch(
-      `https://itunes.apple.com/lookup?id=${id}`
-    );
-
+  
+    const encodedUrl = encodeURIComponent(`https://itunes.apple.com/lookup?id=${id}`);
+    const proxyUrl = `https://api.allorigins.win/get?url=${encodedUrl}`;
+  
+    const response = await fetch(proxyUrl);
+  
     if (!response.ok) {
       throw new Error(`Failed to fetch podcast by ID: ${response.statusText}`);
     }
-
+  
     const data = await response.json();
-    return data.results[0];
+    const text = data.contents;
+  
+    let parsedData;
+    try {
+      parsedData = JSON.parse(text);
+    } catch (error) {
+      throw new Error("Failed to parse the downloaded text as JSON");
+    }
+  
+    return parsedData.results[0];
   }
 
-  async fetchPodcastRSS(rssUrl: string): Promise<any> {
-    console.log(`Fetching podcast RSS from: ${rssUrl}`);
-    const response = await fetch(rssUrl);
-
+  async fetchPodcastRSS(feedUrl: string): Promise<any> {
+    console.log(`Fetching podcast RSS from: ${feedUrl}`);
+  
+    const encodedUrl = encodeURIComponent(feedUrl);
+    const proxyUrl = `https://api.allorigins.win/get?url=${encodedUrl}`;
+  
+    const response = await fetch(proxyUrl);
+  
     if (!response.ok) {
       throw new Error(`Failed to fetch podcast RSS: ${response.statusText}`);
     }
-
-    const text = await response.text();
-
-    // Parse XML (You can use an XML parser or process it as needed)
+  
+    const data = await response.json();
+    const text = data.contents;
+  
     const parser = new DOMParser();
     const xml = parser.parseFromString(text, "application/xml");
-
-    // Convert the XML data into a JavaScript object (basic implementation)
+  
     const items = Array.from(xml.querySelectorAll("item")).map((item) => ({
-      title: item.querySelector("title")?.textContent || "",
-      pubDate: item.querySelector("pubDate")?.textContent || "",
-      duration: item.querySelector("itunes\\:duration")?.textContent || "N/A",
+      title: item.querySelector("title")?.textContent || "Untitled",
+      pubDate: item.querySelector("pubDate")?.textContent || "Unknown Date",
+      duration: item.querySelector("itunes\\:duration")?.textContent || "Unknown Duration",
       guid: item.querySelector("guid")?.textContent || "",
+      description: item.querySelector("description")?.textContent || "No description",
+      audioUrl: item.querySelector("enclosure")?.getAttribute("url") || "",
+      audioType: item.querySelector("enclosure")?.getAttribute("type") || "audio/mpeg",
     }));
-
-    return { items };
+  
+    return { items }; 
   }
+  
 }
