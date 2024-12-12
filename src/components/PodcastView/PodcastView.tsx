@@ -3,23 +3,28 @@ import { useParams } from "react-router-dom";
 import parse from "html-react-parser";
 import "./PodcastView.scss";
 import CardContainer from "../CardContainer/CardContainer";
+import { usePodcastData } from "../../hooks/usePodcast";
 import { usePodcastEpisodes } from "../../hooks/usePodcastEpisodes";
+import PodcastInfoCard from "../LateralPodcastInfoCard/LateralPodcastInfoCard";
 
 const PodcastView: React.FC = () => {
   const { podcastId, episodeId } = useParams<{ podcastId: string; episodeId: string }>();
 
-  const { episodes, isLoading, error } = usePodcastEpisodes(`https://itunes.apple.com/lookup?id=${podcastId}`);
+  const { rssData, isLoading: isPodcastLoading, error: podcastError } = usePodcastData(podcastId!);
 
-  if (isLoading) {
+  const feedUrl = rssData?.feedUrl || "";
+  const { episodes, isLoading: isEpisodesLoading, error: episodesError } = usePodcastEpisodes(feedUrl);
+
+  if (isPodcastLoading || isEpisodesLoading) {
     return <div className="podcast-view__loading">Cargando episodio...</div>;
   }
 
-  if (error) {
+  if (podcastError || episodesError) {
     return (
       <div className="podcast-view__error">
         Error al cargar el episodio. Por favor, inténtalo de nuevo.
         <br />
-        {error}
+        {podcastError || episodesError}
       </div>
     );
   }
@@ -27,9 +32,6 @@ const PodcastView: React.FC = () => {
   if (!episodes || episodes.length === 0) {
     return <div className="podcast-view__error">No se encontraron episodios para este podcast.</div>;
   }
-
-  console.log("Episodes:", episodes);
-  console.log("Episode ID:", episodeId);
 
   const index = parseInt(episodeId || "", 10);
   const item = episodes[index];
@@ -39,7 +41,16 @@ const PodcastView: React.FC = () => {
   }
 
   return (
-    <section className="podcast-view">
+    <div className="podcast-view">
+      <div className="podcast-view__sidebar">
+      <PodcastInfoCard
+        artworkUrl={rssData.artworkUrl600}
+        collectionName={rssData.collectionName}
+        artistName={rssData.artistName}
+        description={rssData.primaryGenreName}
+      />
+      </div>
+      <div className="podcast-view">
       <CardContainer>
         <h1 className="podcast-view__title">
           {parse(item.title || "Sin título")}
@@ -54,7 +65,9 @@ const PodcastView: React.FC = () => {
           Your browser does not support the audio element.
         </audio>
       </CardContainer>
-    </section>
+    </div>
+    </div>
+    
   );
 };
 

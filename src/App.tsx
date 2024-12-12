@@ -9,12 +9,15 @@ function App() {
   return (
     <Router>
       <div className="App">
-        <Link
-          to={`/`}
-          className="episode-list__link"
-        >
-         Podcaster
-        </Link>
+        <div className="Header">
+          <Link
+            to={`/`}
+            className="episode-list__link"
+          >
+          <h2>Podcaster</h2>
+          </Link>
+        </div>
+        <hr className="separator"></hr>
         <Routes>
         <Route path='/' element={<PrincipalView/>} />
         <Route path="/podcast/:podcastId" element={<EpisodeList />} />

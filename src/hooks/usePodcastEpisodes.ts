@@ -17,7 +17,7 @@ export const usePodcastEpisodes = (feedUrl: string) => {
       try {
         setIsLoading(true);
         const podcastService = PodcastService.getInstance();
-        const data = await podcastService.fetchPodcastRSS(feedUrl);
+        const data = await podcastService.fetchPodcastRSS(feedUrl); 
         console.log("Fetched episodes:", data.items);
         setEpisodes(data.items || []);
       } catch (err: any) {

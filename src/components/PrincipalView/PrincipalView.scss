@@ -1,5 +1,9 @@
 .principal-view {
     padding: 1rem;
+
+    .principal-view__list{
+      margin-top: 100px;
+    }
   
     &__loading {
       text-align: center;
@@ -47,7 +51,7 @@
   
     &__list {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
       gap: 1rem;
   
       & > div {

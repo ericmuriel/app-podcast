@@ -1,11 +1,7 @@
-.card-container {
-    border: 2px solid #ccc;
-    padding: 1rem;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    border-radius: 0.5rem;
-  
-    &.customDropShadow {
-      box-shadow: 0 8px 10px rgba(0, 0, 0, 0.15);
-    }
-  }
-  
+.podcast-card-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  padding: 2rem;
+  background-color: #f9f9f9;
+}

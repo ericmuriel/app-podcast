@@ -3,6 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import { usePodcastData } from "../../hooks/usePodcast";
 import { usePodcastEpisodes } from "../../hooks/usePodcastEpisodes";
 import "./EpisodeList.scss";
+import PodcastInfoCard from "../LateralPodcastInfoCard/LateralPodcastInfoCard";
 
 const EpisodeList: React.FC = () => {
   const { podcastId } = useParams<{ podcastId: string }>();
@@ -17,14 +18,13 @@ const EpisodeList: React.FC = () => {
   console.log(episodes);
   return (
     <div className="episode-list">
-      <div className="episode-list__info">
-        <img
-          src={rssData.artworkUrl600}
-          alt={rssData.collectionName}
-          className="episode-list__image"
+      <div className="episode-list__sidebar">
+        <PodcastInfoCard
+          artworkUrl={rssData.artworkUrl600}
+          collectionName={rssData.collectionName}
+          artistName={rssData.artistName}
+          description={rssData.primaryGenreName}
         />
-        <h1>{rssData.collectionName}</h1>
-        <h2>{rssData.artistName}</h2>
       </div>
       <div className="episode-list__episodes">
       {episodes.length > 0 ?
