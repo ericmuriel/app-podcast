@@ -1,0 +1,29 @@
+.podcast-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  
+    &__image {
+      border-radius: 50%;
+      width: 100px;
+      height: 100px;
+      object-fit: cover;
+    }
+  
+    &__name {
+      text-align: center;
+      padding-top: 0.5rem;
+      text-transform: uppercase;
+      font-weight: bold;
+    }
+  
+    &__author {
+      text-align: center;
+      color: #6b7280; // Equivalent to Tailwind's text-gray-500
+      padding-top: 0.5rem;
+      font-size: 0.875rem;
+    }
+  }
+  

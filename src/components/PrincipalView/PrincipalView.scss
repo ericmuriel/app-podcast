@@ -1,0 +1,58 @@
+.principal-view {
+    padding: 1rem;
+  
+    &__loading {
+      text-align: center;
+      font-size: 1.25rem;
+      color: #666;
+    }
+  
+    &__error {
+      text-align: center;
+      color: red;
+      font-size: 1rem;
+    }
+  
+    &__header {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      margin-bottom: 1rem;
+  
+      &__count {
+        background-color: #1e3a8a; // Tailwind's blue-400
+        color: white;
+        font-size: 1.25rem;
+        font-weight: bold;
+        border-radius: 0.25rem;
+        padding: 0.5rem 1rem;
+        margin-right: 0.5rem;
+      }
+  
+      &__search {
+        flex-grow: 0;
+        width: 20rem;
+        border: 1px solid #ccc;
+        border-radius: 0.25rem;
+        padding: 0.5rem;
+        font-size: 1rem;
+        outline: none;
+  
+        &:focus {
+          border-color: #2563eb; // Tailwind's blue-500
+          box-shadow: inset 0 0 0 1px rgba(37, 99, 235, 0.5);
+        }
+      }
+    }
+  
+    &__list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+  
+      & > div {
+        text-align: center;
+      }
+    }
+  }
+  

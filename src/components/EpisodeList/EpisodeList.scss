@@ -1,0 +1,56 @@
+.episode-list {
+  padding: 1rem;
+  width: 100%;
+
+  &__summary {
+    margin-bottom: 1rem;
+
+    .episode-list__title {
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+  }
+
+  &__table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+
+    thead {
+      background-color: #f3f4f6; // Light gray
+    }
+
+    &__header {
+      padding: 1rem;
+      font-weight: bold;
+      font-size: 1rem;
+      border-bottom: 2px solid #e5e7eb; // Border gray
+    }
+
+    tbody {
+      .episode-list__row {
+        &:nth-child(even) {
+          background-color: #f9f9f9; // Alternating row color
+        }
+
+        &:hover {
+          background-color: #f0f0f0; // Hover effect
+        }
+
+        td {
+          padding: 1rem;
+          border-bottom: 1px solid #e5e7eb; // Row border
+        }
+      }
+    }
+  }
+
+  &__link {
+    color: #2563eb; // Blue
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
