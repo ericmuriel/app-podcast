@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { usePodcastData } from "../../hooks/usePodcast";
 import { usePodcastEpisodes } from "../../hooks/usePodcastEpisodes";
@@ -15,7 +15,7 @@ const EpisodeList: React.FC = () => {
   if (isPodcastLoading) return <div>Cargando información del podcast...</div>;
   if (podcastError) return <div>Error: {podcastError}</div>;
   if (episodesError) return <div>Error al cargar episodios: {episodesError}</div>;
-  console.log(episodes);
+  
   return (
     <div className="episode-list">
       <div className="episode-list__sidebar">
@@ -26,10 +26,12 @@ const EpisodeList: React.FC = () => {
           description={rssData.primaryGenreName}
         />
       </div>
+      {!isEpisodesLoading ?
+      <div className="episode-list_container">
       <div className="episode-list__episodes">
-      {episodes.length > 0 ?
-      <>
-      <h3>Episodes: {episodes.length}</h3>
+        <h3>Episodes: {episodes.length} </h3>
+      </div>
+      <div className="episode-list__episodes">
         <table>
           <thead>
             <tr>
@@ -52,9 +54,9 @@ const EpisodeList: React.FC = () => {
             ))}
           </tbody>
         </table>
-      </>
-       : <div>Cargando episodios...</div>}
        </div>
+      </div>
+      : <div>Cargando episodios...</div>}
     </div>
   );
 };

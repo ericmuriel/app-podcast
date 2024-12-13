@@ -15,6 +15,7 @@ export const usePodcastEpisodes = (feedUrl: string) => {
       }
 
       try {
+        console.log('entro1')
         setIsLoading(true);
         const podcastService = PodcastService.getInstance();
         const data = await podcastService.fetchPodcastRSS(feedUrl); 
@@ -23,11 +24,15 @@ export const usePodcastEpisodes = (feedUrl: string) => {
       } catch (err: any) {
         setError(err.message);
       } finally {
+        console.log('entro2')
         setIsLoading(false);
       }
     };
 
-    fetchEpisodes();
+    if (feedUrl) {
+      fetchEpisodes();
+    }
+
   }, [feedUrl]);
 
   return { episodes, isLoading, error };

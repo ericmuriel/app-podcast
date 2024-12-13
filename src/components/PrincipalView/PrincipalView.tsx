@@ -64,7 +64,9 @@ export const PrincipalView = () => {
   return (
     <div className="principal-view">
       <div className="principal-view__header">
-        <div className="principal-view__count">{podcasts.filter(filterFn).length}</div>
+        <div className="principal-view__count">
+          {podcasts.filter(filterFn).length}
+        </div>
         <input
           type="search"
           className="principal-view__search"
@@ -73,10 +75,14 @@ export const PrincipalView = () => {
           onChange={(e) => setValue(e.target.value.trim())}
         />
       </div>
-
-      <div className="principal-view__list">
-        {podcastList.length > 0 ? podcastList : <div>No podcasts found.</div>}
-      </div>
+  
+      <div
+        className={`principal-view__list ${
+          podcastList.length < 4 ? "principal-view__list--few-results" : ""
+          }`}
+          >
+            {podcastList.length > 0 ? podcastList : <div>No podcasts found.</div>}
+        </div>
     </div>
-  );
+  );  
 };

@@ -23,8 +23,6 @@ export type PodcastListResponse = {
 
 export class PodcastService {
   private static instance: PodcastService;
-  private podcastsCache: Podcast[] | null = null;
-  private lastFetchTime: number | null = null;
 
   private readonly podcastLimit = 100;
   private readonly oneDayInMs = 86400000;
@@ -38,16 +36,41 @@ export class PodcastService {
     return PodcastService.instance;
   }
 
-  async fetchAllPodcasts(): Promise<Podcast[]> {
+  private setLocalStorageWithExpiry(key: string, value: any, ttl: number) {
     const now = Date.now();
+    const item = {
+      value,
+      expiry: now + ttl,
+    };
+    localStorage.setItem(key, JSON.stringify(item));
+  }
 
-    if (
-      this.podcastsCache &&
-      this.lastFetchTime &&
-      now - this.lastFetchTime < this.oneDayInMs
-    ) {
+  private getLocalStorageWithExpiry(key: string) {
+    const itemStr = localStorage.getItem(key);
+    if (!itemStr) {
+      return null;
+    }
+    try {
+      const item = JSON.parse(itemStr);
+      const now = Date.now();
+      if (now > item.expiry || !item.value || Object.keys(item.value).length === 0) {
+        localStorage.removeItem(key);
+        return null;
+      }
+      return item.value;
+    } catch (error) {
+      console.error(`Error parsing localStorage key "${key}":`, error);
+      return null;
+    }
+  }
+
+  async fetchAllPodcasts(): Promise<Podcast[]> {
+    const cacheKey = "allPodcasts";
+    const cachedData = this.getLocalStorageWithExpiry(cacheKey);
+
+    if (cachedData) {
       console.log("Using cached podcasts data");
-      return this.podcastsCache;
+      return cachedData;
     }
 
     console.log("Fetching podcasts from API...");
@@ -60,55 +83,69 @@ export class PodcastService {
     }
 
     const data: PodcastListResponse = await response.json();
-    this.podcastsCache = data.feed.entry;
-    this.lastFetchTime = now;
+    const podcasts = data.feed.entry;
 
-    return this.podcastsCache;
+    if (podcasts && podcasts.length > 0) {
+      this.setLocalStorageWithExpiry(cacheKey, podcasts, this.oneDayInMs);
+    }
+
+    return podcasts;
   }
 
   async fetchPodcastById(id: string): Promise<any> {
+    const cacheKey = `podcast-${id}`;
+    const cachedData = this.getLocalStorageWithExpiry(cacheKey);
+
+    if (cachedData) {
+      console.log(`Using cached data for podcast ID: ${id}`);
+      return cachedData;
+    }
+
     console.log(`Fetching podcast details for ID: ${id}`);
-  
     const encodedUrl = encodeURIComponent(`https://itunes.apple.com/lookup?id=${id}`);
     const proxyUrl = `https://api.allorigins.win/get?url=${encodedUrl}`;
-  
+
     const response = await fetch(proxyUrl);
-  
+
     if (!response.ok) {
       throw new Error(`Failed to fetch podcast by ID: ${response.statusText}`);
     }
-  
+
     const data = await response.json();
-    const text = data.contents;
-  
-    let parsedData;
-    try {
-      parsedData = JSON.parse(text);
-    } catch (error) {
-      throw new Error("Failed to parse the downloaded text as JSON");
+    const parsedData = JSON.parse(data.contents).results[0];
+
+    if (parsedData) {
+      this.setLocalStorageWithExpiry(cacheKey, parsedData, this.oneDayInMs);
     }
-  
-    return parsedData.results[0];
+
+    return parsedData;
   }
 
   async fetchPodcastRSS(feedUrl: string): Promise<any> {
+    const cacheKey = `rss-${feedUrl}`;
+    const cachedData = this.getLocalStorageWithExpiry(cacheKey);
+
+    if (cachedData) {
+      console.log(`Using cached RSS data for URL: ${feedUrl}`);
+      return cachedData;
+    }
+
     console.log(`Fetching podcast RSS from: ${feedUrl}`);
-  
     const encodedUrl = encodeURIComponent(feedUrl);
     const proxyUrl = `https://api.allorigins.win/get?url=${encodedUrl}`;
-  
+
     const response = await fetch(proxyUrl);
-  
+
     if (!response.ok) {
       throw new Error(`Failed to fetch podcast RSS: ${response.statusText}`);
     }
-  
+
     const data = await response.json();
     const text = data.contents;
-  
+
     const parser = new DOMParser();
     const xml = parser.parseFromString(text, "application/xml");
-  
+
     const items = Array.from(xml.querySelectorAll("item")).map((item) => ({
       title: item.querySelector("title")?.textContent || "Untitled",
       pubDate: item.querySelector("pubDate")?.textContent || "Unknown Date",
@@ -118,8 +155,15 @@ export class PodcastService {
       audioUrl: item.querySelector("enclosure")?.getAttribute("url") || "",
       audioType: item.querySelector("enclosure")?.getAttribute("type") || "audio/mpeg",
     }));
-  
-    return { items }; 
+
+    const rssData = { items };
+
+    if (rssData && rssData.items.length > 0) {
+      this.setLocalStorageWithExpiry(cacheKey, rssData, this.oneDayInMs);
+    }
+
+    return rssData;
   }
-  
 }
+
+

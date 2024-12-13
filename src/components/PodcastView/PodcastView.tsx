@@ -40,6 +40,7 @@ const PodcastView: React.FC = () => {
     return <div className="podcast-view__error">El episodio no existe.</div>;
   }
 
+  console.log(item.audioUrl, item)
   return (
     <div className="podcast-view">
       <div className="podcast-view__sidebar">
@@ -53,15 +54,15 @@ const PodcastView: React.FC = () => {
       <div className="podcast-view">
       <CardContainer>
         <h1 className="podcast-view__title">
-          {parse(item.title || "Sin título")}
+          {item.title || "Sin título"}
         </h1>
 
         <div className="podcast-view__description">
-          {parse(item.description || "No description available.")}
+          {item.description || "No description available."}
         </div>
 
         <audio controls className="podcast-view__audio">
-          <source src={item.enclosure?.["@_url"]} type={item.enclosure?.["@_type"]} />
+          <source src={item.audioUrl} type={item.audioType} />
           Your browser does not support the audio element.
         </audio>
       </CardContainer>

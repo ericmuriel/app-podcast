@@ -4,6 +4,19 @@
   padding: 20px;
   margin-top: 20px;
 
+  &_container{
+    width: 100%;
+  }
+
+  &_title{
+    margin-bottom: 10px;
+    flex: 2;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 15px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
   &__info {
     flex: 1;
     max-width: 300px;
