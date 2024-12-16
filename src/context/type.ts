@@ -6,8 +6,6 @@ export interface Podcast {
   }
 
 export interface GenericContextValue{
-    podcasts: Podcast[];
-    setPodcasts: React.Dispatch<React.SetStateAction<Podcast[]>>;
     isLoading: boolean;
     setIsLoading: React.Dispatch<React.SetStateAction<boolean>>
 }

@@ -15,6 +15,7 @@ const EpisodeList: React.FC = () => {
   if (isPodcastLoading) return <div>Cargando información del podcast...</div>;
   if (podcastError) return <div>Error: {podcastError}</div>;
   if (episodesError) return <div>Error al cargar episodios: {episodesError}</div>;
+  console.log(rssData)
   
   return (
     <div className="episode-list">
@@ -23,7 +24,6 @@ const EpisodeList: React.FC = () => {
           artworkUrl={rssData.artworkUrl600}
           collectionName={rssData.collectionName}
           artistName={rssData.artistName}
-          description={rssData.primaryGenreName}
         />
       </div>
       {!isEpisodesLoading ?
@@ -42,7 +42,7 @@ const EpisodeList: React.FC = () => {
           </thead>
           <tbody>
             {episodes.map((episode, index) => (
-              <tr key={episode.guid || index}>
+              <tr className="episode" key={episode.guid || index}>
                 <td>
                   <Link to={`/podcast/${podcastId}/episode/${index}`}>
                     {episode.title}

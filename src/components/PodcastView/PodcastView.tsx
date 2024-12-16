@@ -40,7 +40,6 @@ const PodcastView: React.FC = () => {
     return <div className="podcast-view__error">El episodio no existe.</div>;
   }
 
-  console.log(item.audioUrl, item)
   return (
     <div className="podcast-view">
       <div className="podcast-view__sidebar">
@@ -58,7 +57,7 @@ const PodcastView: React.FC = () => {
         </h1>
 
         <div className="podcast-view__description">
-          {item.description || "No description available."}
+          {parse(item.description) || "No description available."}
         </div>
 
         <audio controls className="podcast-view__audio">

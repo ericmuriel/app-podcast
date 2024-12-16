@@ -50,7 +50,7 @@ export const PrincipalView = () => {
       value === ''
     );
   };
-
+  
   const podcastList = podcasts.filter(filterFn).map((entry) => (
     <Link key={entry.id.attributes['im:id']} to={`/podcast/${entry.id.attributes['im:id']}`}>
       <PodcastCard
@@ -72,7 +72,7 @@ export const PrincipalView = () => {
           className="principal-view__search"
           placeholder="Filter podcasts..."
           value={value}
-          onChange={(e) => setValue(e.target.value.trim())}
+          onChange={(e) => setValue(e.target.value)}
         />
       </div>
   
