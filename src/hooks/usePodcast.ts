@@ -3,6 +3,7 @@ import { PodcastService } from "../services/PodcastService";
 
 export const usePodcastData = (podcastId: string) => {
   const [rssData, setRssData] = useState<any | null>(null);
+  const [episodes, setEpisodes] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -11,8 +12,12 @@ export const usePodcastData = (podcastId: string) => {
       try {
         setIsLoading(true);
         const podcastService = PodcastService.getInstance();
-        const data = await podcastService.fetchPodcastById(podcastId);
-        setRssData(data);
+
+        const podcastData = await podcastService.fetchPodcastById(podcastId);
+        setRssData(podcastData);
+
+        const episodesData = await podcastService.fetchEpisodesByPodcastId(podcastId);
+        setEpisodes(episodesData);
       } catch (err: any) {
         setError(err.message);
       } finally {
@@ -25,5 +30,5 @@ export const usePodcastData = (podcastId: string) => {
     }
   }, [podcastId]);
 
-  return { rssData, isLoading, error };
+  return { rssData, episodes, isLoading, error };
 };

@@ -1,39 +1,43 @@
-import { useState, useEffect } from "react";
-import { PodcastService } from "../services/PodcastService";
+import { useEffect, useState } from "react";
+import { PodcastService, Podcast } from "../services/PodcastService";
+import { CacheService } from "../services/CacheService";
 
-export const usePodcastEpisodes = (feedUrl: string) => {
-  const [episodes, setEpisodes] = useState<any[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+export const usePodcastsEpisodes = () => {
+  const [podcasts, setPodcasts] = useState<Podcast[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  const podcastService = PodcastService.getInstance();
+  const cacheService = CacheService.getInstance();
+
   useEffect(() => {
-    const fetchEpisodes = async () => {
-      if (!feedUrl) {
-        setEpisodes([]);
-        setIsLoading(false);
-        return;
-      }
+    const fetchData = async () => {
+      const cacheKey = "allPodcasts";
+      const oneDayInMs = 86400000;
 
       try {
-        console.log('entro1')
         setIsLoading(true);
-        const podcastService = PodcastService.getInstance();
-        const data = await podcastService.fetchPodcastRSS(feedUrl); 
-        console.log("Fetched episodes:", data.items);
-        setEpisodes(data.items || []);
+
+        const cachedData = cacheService.getItemWithExpiry(cacheKey);
+        if (cachedData) {
+          console.log("Using cached podcasts data");
+          setPodcasts(cachedData);
+          return;
+        }
+
+        const data = await podcastService.fetchAllPodcasts();
+        setPodcasts(data);
+
+        cacheService.setItemWithExpiry(cacheKey, data, oneDayInMs);
       } catch (err: any) {
         setError(err.message);
       } finally {
-        console.log('entro2')
         setIsLoading(false);
       }
     };
 
-    if (feedUrl) {
-      fetchEpisodes();
-    }
+    fetchData();
+  }, []);
 
-  }, [feedUrl]);
-
-  return { episodes, isLoading, error };
+  return { podcasts, isLoading, error };
 };
