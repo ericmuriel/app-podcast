@@ -8,16 +8,19 @@ const PodcastInfoCard: React.FC<PodcastInfoCardProps> = ({
   artistName,
 }) => {
   return (
-    <div className="podcast-sidebar">
+    <div className="podcast-sidebar" data-id="podcast-card">
       <img
-        src={artworkUrl}
-        alt={collectionName}
+        src={artworkUrl || "https://via.placeholder.com/150"} 
+        alt={collectionName || "Podcast artwork"}
         className="podcast-sidebar__image"
       />
-      <h2 className="podcast-sidebar__title">{collectionName.toLocaleUpperCase()}</h2>
-      <h2 className="podcast-sidebar__artist">by {artistName}</h2>
+      <h2 className="podcast-sidebar__title">
+        {collectionName?.toLocaleUpperCase() || "UNKNOWN PODCAST"}
+      </h2>
+      <h2 className="podcast-sidebar__artist">
+        {artistName ? `by ${artistName}` : "by Unknown Artist"}
+      </h2>
     </div>
   );
 };
-
 export default PodcastInfoCard;

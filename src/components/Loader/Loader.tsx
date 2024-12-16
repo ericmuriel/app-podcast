@@ -7,8 +7,8 @@ const Loader = () => {
   if (!isLoading) return null;
 
   return (
-    <div className="loader-indicator">
-      <div className="spinner"></div>
+    <div className="loader-indicator" role="alert" aria-busy="true">
+      <div className="spinner" role="status" aria-live="polite"></div>
     </div>
   );
 };

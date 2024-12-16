@@ -4,6 +4,7 @@ import { usePodcastData } from "../../hooks/usePodcast";
 import "./EpisodeList.scss";
 import PodcastInfoCard from "../LateralPodcastInfoCard/LateralPodcastInfoCard";
 import { useLoader } from "../../context/LoaderContext";
+import { formatDuration } from "../../utils/FormatDuration";
 
 const EpisodeList: React.FC = () => {
   const { podcastId } = useParams<{ podcastId: string }>();
@@ -63,12 +64,5 @@ const EpisodeList: React.FC = () => {
   );
 };
 
-// Helper function para formatear duración
-const formatDuration = (millis: number) => {
-  const totalSeconds = Math.floor(millis / 1000);
-  const minutes = Math.floor(totalSeconds / 60);
-  const seconds = totalSeconds % 60;
-  return `${minutes}:${seconds.toString().padStart(2, "0")}`;
-};
 
 export default EpisodeList;

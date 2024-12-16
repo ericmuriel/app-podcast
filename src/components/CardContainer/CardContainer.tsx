@@ -8,7 +8,7 @@ export interface AuxProps {
 
 const CardContainer: React.FC<AuxProps> = ({ children, className }) => {
   return (
-    <div className={`card-container ${className || ""}`}>
+    <div data-testid="card-container" className={`card-container ${className || ""}`}>
       {children}
     </div>
   );
