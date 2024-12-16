@@ -164,6 +164,6 @@ expect(image).toHaveAttribute("src", "http://example.com/artwork.jpg");
 ### 👨‍💻 **Autor**
 
 **Eric Muriel**  
-[LinkedIn](https://linkedin.com/ericmuriel) | [GitHub](https://github.com/yourusername)
+[LinkedIn](https://linkedin.com/in/ericmuriel) | [GitHub](https://github.com/ericmuriel)
 
 ---
