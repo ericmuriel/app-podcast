@@ -36,7 +36,6 @@ describe('usePodcastData', () => {
 
     const { result } = renderHook(() => usePodcastData(podcastId));
 
-    // Espera a que `isLoading` sea falso
     await waitFor(() => {
       expect(result.current.isLoading).toBe(false);
     });

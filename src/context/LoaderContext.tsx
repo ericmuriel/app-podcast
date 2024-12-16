@@ -21,7 +21,6 @@ export const LoaderProvider: React.FC<{ children: ReactNode }> = ({ children }) 
 
 export const useLoader = () => {
   const context = useContext(LoaderContext);
-  console.log(context);
   if (!context) {
     throw new Error("useLoader must be used within a LoaderProvider");
   }

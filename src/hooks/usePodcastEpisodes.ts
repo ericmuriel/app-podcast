@@ -20,7 +20,6 @@ export const usePodcastsEpisodes = () => {
 
         const cachedData = cacheService.getItemWithExpiry(cacheKey);
         if (cachedData) {
-          console.log("Using cached podcasts data");
           setPodcasts(cachedData);
           return;
         }
